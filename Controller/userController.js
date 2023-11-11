@@ -10,6 +10,7 @@ const regfun = async (req, res) => {
     try {
         const findemail = await useraccounts.findOne({ email: data.email });
         if (findemail) {
+            console.log(findemail);
             return res.send({ msg: "User Already Registered!" })
         }
         else {
@@ -41,11 +42,12 @@ const logfun = async (req, res) => {
     const logindata = req.body;
     const finduser = await useraccounts.findOne({ email: logindata.email });
     if (finduser) {
+        console.log(finduser);
         const validate = bcrypt.compareSync(logindata.pass, finduser.pass);
         if (validate) {
             const token = jwt.sign({ useremail: logindata.email }, secret_key, { expiresIn: "360000" });
             console.log("token:", token);
-            return res.send({ msg: "User Logged in Successfully!", token: token });
+            return res.send({ msg: "User Logged in Successfully!", token: token, userdetail: finduser });
         }
         else {
             return res.send({ msg: "User Password is Wrong!" });
