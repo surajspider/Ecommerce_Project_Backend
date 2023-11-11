@@ -4,6 +4,7 @@ const PORT = 4500;
 const cors = require("cors");
 const datarouter = require("./Router/DataRouter");
 const userrouter = require("./Router/Userrouter");
+const connection = require("./Config/db");
 
 
 app.use(cors({
@@ -19,8 +20,9 @@ app.get("/", (req, res) => {
 app.use("/api", datarouter);
 app.use("/apis", userrouter);
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     try {
+        await connection();
         console.log("Application running on PORT", PORT);
     }
     catch (err) {

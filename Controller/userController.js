@@ -1,39 +1,45 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const userAccounts = require("../Models/DataModel");
+const useraccounts = require("../Models/DataModel");
 const secret_key = "suraj";
 
 const regfun = async (req, res) => {
     const data = req.body;
     console.log(data);
-    const findemail = await userAccounts.findOne({ email: data.email });
-    if (findemail) {
-        return res.send({ msg: "User Already Registered!" })
-    }
-    else {
-        const saltround = bcrypt.genSaltSync(10);
-        const hashpassword = bcrypt.hashSync(data.pass, saltround);
-        console.log(hashpassword);
-        const tempobj = {
-            uname: data.uname,
-            email: data.email,
-            pass: hashpassword,
-            contact: data.contact
+    // const findemail = false;
+    try {
+        const findemail = await useraccounts.findOne({ email: data.email });
+        if (findemail) {
+            return res.send({ msg: "User Already Registered!" })
         }
-        const newuser = await userAccounts.create(tempobj);
-        // const newUser = new userAccounts(tempobj);
-        // await newUser.save();
+        else {
+            const saltround = bcrypt.genSaltSync(10);
+            const hashpassword = bcrypt.hashSync(data.pass, saltround);
+            console.log(hashpassword);
+            const tempobj = {
+                uname: data.uname,
+                email: data.email,
+                pass: hashpassword,
+                contact: data.contact
+            }
+            const newuser = await useraccounts.create(tempobj);
+            // const newUser = new userAccounts(tempobj);
+            // await newUser.save();
 
-        const token = jwt.sign({ email: data.email }, secret_key, { expiresIn: "360000" });
-        console.log("Token:", token);
-        res.send({ msg: "User Registered Successfully!", token: token });
-        console.log(newUser);
+            const token = jwt.sign({ email: data.email }, secret_key, { expiresIn: "360000" });
+            console.log("Token:", token);
+            res.send({ msg: "User Registered Successfully!", token: token });
+            console.log(newuser);
+        }
+    }
+    catch (err) {
+        console.log("Error", err)
     }
 }
 
 const logfun = async (req, res) => {
     const logindata = req.body;
-    const finduser = await userAccounts.findOne({ email: logindata.email });
+    const finduser = await useraccounts.findOne({ email: logindata.email });
     if (finduser) {
         const validate = bcrypt.compareSync(logindata.pass, finduser.pass);
         if (validate) {
