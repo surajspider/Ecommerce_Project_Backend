@@ -20,11 +20,14 @@ const regfun = async (req, res) => {
             pass: hashpassword,
             contact: data.contact
         }
-        const newuser = await userAccounts.create(tempobj);
+        // const newuser = await userAccounts.create(tempobj);
+        const newUser = new userAccounts(tempobj);
+        await newUser.save();
+
         const token = jwt.sign({ email: data.email }, secret_key, { expiresIn: "360000" });
         console.log("Token:", token);
         res.send({ msg: "User Registered Successfully!", token: token });
-        console.log(newuser);
+        console.log(newUser);
     }
 }
 
