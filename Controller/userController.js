@@ -1,17 +1,12 @@
-const userslist = [];
-
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const userAccounts = require("../Models/DataModel");
 const secret_key = "suraj";
 
-const regfun = (req, res) => {
+const regfun = async (req, res) => {
     const data = req.body;
     console.log(data);
-    const findemail = userslist.find((item) => {
-        if (item.email === data.email) {
-            return item;
-        }
-    });
+    const findemail = await userAccounts.findOne({ email: data.email });
     if (findemail) {
         return res.send({ msg: "User Already Registered!" })
     }
@@ -25,20 +20,17 @@ const regfun = (req, res) => {
             pass: hashpassword,
             contact: data.contact
         }
-        userslist.push(tempobj);
+        const newuser = await userAccounts.create(tempobj);
         const token = jwt.sign({ email: data.email }, secret_key, { expiresIn: "360000" });
         console.log("Token:", token);
         res.send({ msg: "User Registered Successfully!", token: token });
-        console.log(userslist);
+        console.log(newuser);
     }
 }
 
-const logfun = (req, res) => {
+const logfun = async (req, res) => {
     const logindata = req.body;
-    const finduser = userslist.find(item => {
-        if (item.email === logindata.email)
-            return item;
-    })
+    const finduser = await userAccounts.findOne({ email: logindata.email });
     if (finduser) {
         const validate = bcrypt.compareSync(logindata.pass, finduser.pass);
         if (validate) {
