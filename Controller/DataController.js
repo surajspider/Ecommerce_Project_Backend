@@ -25,4 +25,17 @@ const getalldata = async (req, res) => {
     }
 }
 
-module.exports = { allcat, getalldata };
+const searchdata = async (req, res) => {
+    const searchText = req.query.searchText;
+    try {
+        const result = await productDatas.find({
+            pname: { $regex: searchText, $options: "i" }
+        })
+        res.send(result);
+    }
+    catch (err) {
+        console.log("Error in searching data:", err);
+    }
+}
+
+module.exports = { allcat, getalldata, searchdata };
