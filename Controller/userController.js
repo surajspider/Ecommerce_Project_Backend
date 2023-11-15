@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const useraccounts = require("../Models/DataModel");
+const { useraccounts } = require("../Models/DataModel");
 const secret_key = "suraj";
 
 const regfun = async (req, res) => {

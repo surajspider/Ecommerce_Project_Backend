@@ -1,7 +1,8 @@
-const { allcat } = require("../Controller/DataController");
+const { allcat, getalldata } = require("../Controller/DataController");
 
 const datarouter = require("express").Router();
 
-datarouter.get("/alldata", allcat);
+datarouter.post("/pushalldata", allcat);
+datarouter.get("/fetchalldata", getalldata);
 
 module.exports = datarouter;
