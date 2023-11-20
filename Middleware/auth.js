@@ -10,6 +10,7 @@ const auth = (req, res, next) => {
         try {
             const validate = jwt.verify(token, secret_key);
             if (validate) {
+                req.user = validate;
                 next();
             } else {
                 console.log("User not authorized!");
