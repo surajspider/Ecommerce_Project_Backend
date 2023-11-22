@@ -9,7 +9,7 @@ const base = "https://api-m.sandbox.paypal.com";
  * @see https://developer.paypal.com/docs/api/orders/v2/#orders_create
  */
 async function createOrder(data) {
-    console.log(data.product.cost)
+    console.log(data.totalAmount)
     const accessToken = await generateAccessToken();
     console.log("accesstoken:", accessToken);
     const url = `${base}/v2/checkout/orders`;
@@ -27,7 +27,7 @@ async function createOrder(data) {
                 {
                     amount: {
                         currency_code: "USD",
-                        value: data.product.cost,
+                        value: data.totalAmount,
                     },
                 },
             ],
